@@ -10,7 +10,9 @@ st.title("Dashboard Dinámico con Streamlit")
 st.sidebar.header("Opciones de Visualización")
 
 # Generar un dataset de ejemplo
-@st.cache
+
+
+@st.cache_data
 def load_data():
     dates = pd.date_range(start="2023-01-01", periods=100)
     data = pd.DataFrame({
@@ -18,6 +20,7 @@ def load_data():
         'Value': np.random.randn(100).cumsum()
     })
     return data
+
 
 data = load_data()
 
@@ -27,10 +30,12 @@ if st.sidebar.checkbox("Mostrar datos"):
     st.write(data)
 
 # Selección del tipo de gráfico
-chart_type = st.sidebar.selectbox("Selecciona el tipo de gráfico", ["Línea", "Barra", "Histograma"])
+chart_type = st.sidebar.selectbox("Selecciona el tipo de gráfico", [
+                                  "Línea", "Barra", "Histograma"])
 
 # Parámetros del histograma
-bins = st.sidebar.slider("Número de bins del histograma", min_value=5, max_value=50, value=10) if chart_type == "Histograma" else None
+bins = st.sidebar.slider("Número de bins del histograma", min_value=5,
+                         max_value=50, value=10) if chart_type == "Histograma" else None
 
 # Generar gráficos según la selección del usuario
 st.subheader(f"Gráfico de {chart_type}")
@@ -52,7 +57,8 @@ start_date = st.sidebar.date_input("Fecha de inicio", data['Date'].min())
 end_date = st.sidebar.date_input("Fecha de fin", data['Date'].max())
 
 # Filtrar datos según las fechas seleccionadas
-filtered_data = data[(data['Date'] >= pd.Timestamp(start_date)) & (data['Date'] <= pd.Timestamp(end_date))]
+filtered_data = data[(data['Date'] >= pd.Timestamp(start_date)) & (
+    data['Date'] <= pd.Timestamp(end_date))]
 
 if st.sidebar.checkbox("Mostrar datos filtrados"):
     st.subheader("Datos Filtrados")
